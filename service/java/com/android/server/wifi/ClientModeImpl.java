@@ -7500,9 +7500,12 @@ public class ClientModeImpl extends StateMachine implements ClientMode {
                                 if (!config.getNetworkSelectionStatus()
                                         .hasEverValidatedInternetAccess()
                                         && !config.noInternetAccessExpected) {
+                                    // Validation can fail while the AP or upstream is starting.
+                                    // Allow a later retry, including after reboot. An explicit
+                                    // user rejection above still disables autojoin permanently.
                                     mWifiConfigManager.updateNetworkSelectionStatus(
                                             config.networkId,
-                                            DISABLED_NO_INTERNET_PERMANENT);
+                                            DISABLED_NO_INTERNET_TEMPORARY);
                                 } else if (!isRecentlySelectedByTheUser(config)
                                         && !config.noInternetAccessExpected) {
                                     // If this was not recently selected by the user, update network

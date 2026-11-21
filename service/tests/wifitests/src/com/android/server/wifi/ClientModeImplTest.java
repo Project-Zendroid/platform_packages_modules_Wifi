@@ -5671,8 +5671,10 @@ public class ClientModeImplTest extends WifiBaseTest {
     public void testInternetValidationFailureUserSelectedRecently_ExpectDisabled()
             throws Exception {
         testInternetValidationUserSelectedRecently(false);
-        // expect disabled because the network has never had internet validation passed
+        // A first validation failure may be transient; retry instead of persisting a blacklist.
         verify(mWifiConfigManager).updateNetworkSelectionStatus(
+                FRAMEWORK_NETWORK_ID, DISABLED_NO_INTERNET_TEMPORARY);
+        verify(mWifiConfigManager, never()).updateNetworkSelectionStatus(
                 FRAMEWORK_NETWORK_ID, DISABLED_NO_INTERNET_PERMANENT);
     }
 
